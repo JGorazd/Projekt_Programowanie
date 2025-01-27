@@ -12,11 +12,7 @@ namespace Zarzadzanie_Pojazdami
         public static void Zmien()
         {
             Console.Write("Podaj ID klienta do zmiany: ");
-            if (!int.TryParse(Console.ReadLine(), out int klientID))
-            {
-                Console.WriteLine("Podano nieprawidłowy ID klienta.");
-                return;
-            }
+            int klientID = int.Parse(Console.ReadLine());
 
             Console.Write("Nowe imię : ");
             string noweImie = Console.ReadLine();
