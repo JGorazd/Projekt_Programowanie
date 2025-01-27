@@ -1,0 +1,68 @@
+
+CREATE DATABASE SystemZarzadzaniaSamochodami;
+
+CREATE TABLE Klienci (
+    KlientID INT IDENTITY(1,1) PRIMARY KEY,
+    Imie NVARCHAR(50) NOT NULL,
+    Nazwisko NVARCHAR(50) NOT NULL,
+    Email NVARCHAR(100) UNIQUE NOT NULL,
+    Telefon NVARCHAR(15) NOT NULL
+);
+
+CREATE TABLE Pojazdy (
+    PojazdID INT IDENTITY(1,1) PRIMARY KEY,
+    NumerRejestracyjny NVARCHAR(15) UNIQUE NOT NULL,
+    Marka NVARCHAR(50) NOT NULL,
+    Model NVARCHAR(50) NOT NULL,
+    RokProdukcji INT NOT NULL,
+    KlientID INT NOT NULL,
+    FOREIGN KEY (KlientID) REFERENCES Klienci(KlientID) ON DELETE CASCADE
+);
+
+
+CREATE TABLE PrzegladyTechniczne (
+    PrzegladID INT IDENTITY(1,1) PRIMARY KEY,
+    DataPrzegladu DATE NOT NULL,
+    WaznoscDo DATE NOT NULL,
+    PojazdID INT NOT NULL,
+    FOREIGN KEY (PojazdID) REFERENCES Pojazdy(PojazdID) ON DELETE CASCADE
+);
+
+
+CREATE TABLE Serwisy (
+    SerwisID INT IDENTITY(1,1) PRIMARY KEY,
+    Nazwa NVARCHAR(100) NOT NULL,
+    Adres NVARCHAR(255) NOT NULL,
+    Telefon NVARCHAR(15) NOT NULL
+);
+
+
+CREATE TABLE ZgloszeniaNapraw (
+    ZgloszenieID INT IDENTITY(1,1) PRIMARY KEY,
+    DataZgloszenia DATE NOT NULL,
+    OpisProblemu NVARCHAR(MAX) NOT NULL,
+    PojazdID INT NOT NULL,
+    SerwisID INT NOT NULL,
+    FOREIGN KEY (PojazdID) REFERENCES Pojazdy(PojazdID) ON DELETE CASCADE,
+    FOREIGN KEY (SerwisID) REFERENCES Serwisy(SerwisID) ON DELETE CASCADE
+);
+
+
+CREATE TABLE Czesci (
+    CzescID INT IDENTITY(1,1) PRIMARY KEY,
+    NazwaCzesci NVARCHAR(100) NOT NULL,
+    Cena DECIMAL(10,2) NOT NULL,
+    Ilosc INT NOT NULL
+);
+
+
+CREATE TABLE Naprawy (
+    NaprawaID INT IDENTITY(1,1) PRIMARY KEY,
+    DataNaprawy DATE NOT NULL,
+    KosztNaprawy DECIMAL(10,2) NOT NULL,
+    OpisNaprawy NVARCHAR(MAX),
+    PojazdID INT NOT NULL,
+    CzescID INT,
+    FOREIGN KEY (PojazdID) REFERENCES Pojazdy(PojazdID) ON DELETE CASCADE,
+    FOREIGN KEY (CzescID) REFERENCES Czesci(CzescID)
+);
